@@ -1,3 +1,3 @@
 User-agent: *
 Disallow: /mentions-legales.html
-Sitemap: https://cappeliez-couvreur-25.fr/sitemap.xml
+Sitemap: https://couvreur-68.com/sitemap.xml
