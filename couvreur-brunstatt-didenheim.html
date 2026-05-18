@@ -220,7 +220,6 @@
                 <input type="hidden" name="_captcha" value="false">
                 <input type="hidden" name="_template" value="table">
                 <input type="hidden" name="_subject" value="Nouveau contact - FK Toiture">
-                <input type="hidden" name="_next" value="https://fk-couvreur-68.fr/couvreur-brunstatt-didenheim.html">
                 <label for="name">Nom :</label>
                 <input type="text" id="name" name="nom" required>
                 <label for="tel">Téléphone :</label>
@@ -244,6 +243,10 @@
                 <textarea id="comments" name="commentaires" rows="4" required></textarea>
                 <button type="submit">ENVOYER</button>
             </form>
+            <div id="contactThanks" style="display:none; padding: 30px 20px; background-color: #e8f5e9; border: 2px solid #2e7d32; border-radius: 8px; text-align: center; margin-top: 20px;">
+                <h3 style="color: #2e7d32; margin: 0 0 10px 0;">Merci pour votre demande !</h3>
+                <p style="margin: 0; color: #1b5e20; font-size: 1.05em;">Nous vous recontactons rapidement.</p>
+            </div>
         </div>
         <h2 id="prestation">Nos services de couvreur a Brunstatt-Didenheim</h2>
         <div class="one-mob">
@@ -605,21 +608,30 @@
         btn.disabled = true;
         var nom = (form.querySelector('[name="nom"]') || {}).value || '';
         var tel = (form.querySelector('[name="tel"]') || {}).value || '';
+        var email = (form.querySelector('[name="email"]') || {}).value || '';
         var services = (form.querySelector('[name="services"]') || {}).value || '';
         var commentaires = (form.querySelector('[name="commentaires"]') || {}).value || '';
         var webhookData = new FormData();
         webhookData.append('name', nom);
-        var email = (form.querySelector('[name="email"]') || {}).value;
         webhookData.append('email', email);
         webhookData.append('tel', tel);
         webhookData.append('service', services);
         webhookData.append('message', 'Telephone : ' + tel + '\nService demande : ' + services + '\n\n' + commentaires);
-        fetch('https://webprime.app/webhook/contact/fc37c975f8a13d5590625ee5e81329029a926affac2551f8e402c8fc5901c394', {
+        var p1 = fetch('https://webprime.app/webhook/contact/fc37c975f8a13d5590625ee5e81329029a926affac2551f8e402c8fc5901c394', {
             method: 'POST',
             body: webhookData,
             keepalive: true
         }).catch(function() {});
-        form.submit();
+        var p2 = fetch('https://formsubmit.co/ajax/fktoiture68@gmail.com', {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+        }).catch(function() {});
+        Promise.allSettled([p1, p2]).then(function() {
+            form.style.display = 'none';
+            var thanks = document.getElementById('contactThanks');
+            if (thanks) thanks.style.display = 'block';
+        });
         return false;
     }
     </script>
