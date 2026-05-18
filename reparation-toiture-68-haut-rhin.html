@@ -479,13 +479,19 @@
         var p2 = fetch('https://formsubmit.co/ajax/fktoiture68@gmail.com', {
             method: 'POST',
             body: new FormData(form),
+            keepalive: true,
             headers: { 'Accept': 'application/json' }
         }).catch(function() {});
-        Promise.allSettled([p1, p2]).then(function() {
+        var shown = false;
+        var showThanks = function() {
+            if (shown) return;
+            shown = true;
             form.style.display = 'none';
             var thanks = document.getElementById('contactThanks');
             if (thanks) thanks.style.display = 'block';
-        });
+        };
+        Promise.allSettled([p1, p2]).then(showThanks);
+        setTimeout(showThanks, 4000);
         return false;
     }
     </script>
