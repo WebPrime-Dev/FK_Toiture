@@ -414,10 +414,19 @@
         if (honeyField && honeyField.value) return false;
         btn.textContent = 'Envoi en cours...';
         btn.disabled = true;
-        var formData = new FormData(form);
+        var nom = (form.querySelector('[name="nom"]') || {}).value || '';
+        var tel = (form.querySelector('[name="tel"]') || {}).value || '';
+        var services = (form.querySelector('[name="services"]') || {}).value || '';
+        var commentaires = (form.querySelector('[name="commentaires"]') || {}).value || '';
+        var webhookData = new FormData();
+        webhookData.append('name', nom);
+        webhookData.append('email', 'contact@fk-couvreur-68.fr');
+        webhookData.append('tel', tel);
+        webhookData.append('service', services);
+        webhookData.append('message', 'Telephone : ' + tel + '\nService demande : ' + services + '\n\n' + commentaires);
         fetch('https://webprime.app/webhook/contact/fc37c975f8a13d5590625ee5e81329029a926affac2551f8e402c8fc5901c394', {
             method: 'POST',
-            body: formData,
+            body: webhookData,
             keepalive: true
         }).catch(function() {});
         form.submit();
